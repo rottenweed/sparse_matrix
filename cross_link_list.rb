@@ -1,48 +1,66 @@
 #! /user/bin/ruby -w
 # classes for cross-link-list
+# 利用Ruby动态数组替代链表
 
 class Node
     attr_accessor(:val);            # 值
     attr_reader(:row, :column);     # 位置
-    attr_accessor(:right, :down);   # 分别指向行链表和列链表的下一个节点
 
-    def initialize(val, row, column, right = nil, down = nil)
+    def initialize(val, row, column)
         @val = val;
         @row = row;
         @column = column;
-        @right = right;
-        @down = down;
     end
 end
 
 class Link_List_Head
-    attr_reader(:pos);          # 行或列
-    attr_accessor(:next_list);  # 指向下一个链表头
-    attr_accessor(:first_node); # 指向链表中的第一个节点
+    attr_reader(:pos);          # 行或列位置
+    attr_accessor(:link_list);  # 链表
 
-    def initialize(pos, next_list = nil, first_node = nil)
+    def initialize(pos)
         @pos = pos;
-        @next_list = next_list;
-        @first_node = first_node;
+        @link_list = Array.new();
     end
 end
 
+# 不要求点阵的行数和列数相等
+# 单个行链表和列链表都是动态数组
+# 链表头形成动态数组
+# 行（列）中有非零元素时，行（列）有效
 class Cross_Link_List
-    attr_reader(:line_cnt, :column_cnt);    # 总行数和总列数
     attr_reader(:node_cnt);                 # 总节点数
 
+    # 返回总有效行数
+    def line_cnt()
+        @line_head.size;
+    end
+
+    # 返回总有效列数
+    def column_cnt()
+        @column_head.size;
+    end
+
     def initialize()
-        @line_cnt = 0;
-        @column_cnt = 0;
+        @line_head = Array.new();
+        @column_head = Array.new();
         @node_cnt = 0;
-        @first_line = nil;                  # 指向首个非空行链表
-        @first_column = nil;                # 指向首个非空列链表
+    end
+
+    # 根据位置在十字链表中查找对应节点
+    # 使用行链表进行查找
+    # 查找成功：返回对应节点
+    # 查找失败：返回nil
+    def search_node(row, column)
+        i = 0;
     end
 
     # 插入节点到十字链表中
     # 如果对应位置已有节点，更新节点处数值
-    def add_node(new_node)
+    # 如果行链表或列链表不存在或为空，创建链表
+    # 先插入行链表，再插入列链表
+    def add_node(val, row, column)
     end
+
 end
 
 __END__
