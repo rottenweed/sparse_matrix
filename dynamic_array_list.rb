@@ -2,32 +2,35 @@
 # classes for line-link-list
 # 利用Ruby的二维动态数组构成的广义表替代链表
 
-class Node
-    attr_accessor(:val);            # 值
-    attr_reader(:column);           # 列位置
-
-    def initialize(val, row, column)
-        @val = val;
-        @column = column;
-    end
-end
-
-class Link_List_Head
-    attr_reader(:row);          # 行位置
-    attr_accessor(:link_list);  # 链表
-
-    def initialize(row)
-        @row = row;
-        @link_list = Array.new();
-    end
-end
 
 # 不要求点阵的行数和列数相等
 # 单个行链表是动态数组
 # 链表头形成上层动态数组
 # 行中有非零元素时，行有效
 class Dynamic_Array_List
-    attr_reader(:node_cnt);                 # 总节点数
+    attr_reader(:node_cnt);             # 总节点数
+
+    # 节点定义
+    class Node
+        attr_accessor(:val);            # 值
+        attr_reader(:column);           # 列位置
+
+        def initialize(val, row, column)
+            @val = val;
+            @column = column;
+        end
+    end
+
+    # 行链表头定义
+    class Link_List_Head
+        attr_reader(:row);              # 行位置
+        attr_accessor(:link_list);      # 链表
+
+        def initialize(row)
+            @row = row;
+            @link_list = [];
+        end
+    end
 
     # 返回总有效行数
     def line_cnt()
@@ -35,7 +38,7 @@ class Dynamic_Array_List
     end
 
     def initialize()
-        @line_head = Array.new();
+        @line_head = [];
         @node_cnt = 0;
     end
 
