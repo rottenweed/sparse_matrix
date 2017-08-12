@@ -3,6 +3,7 @@
 
 # require './cross_link_list.rb'
 require './dynamic_array_list.rb'
+require './hash_matrix.rb'
 
 BEGIN {
     print("Test sparse matrix stored by dynamic array list.\n");
@@ -39,6 +40,25 @@ print("Line count: ", mat0.line_cnt, "\n");
 print("Node count: ", mat0.node_cnt, "\n");
 
 mat0.show_all;
+
+print("\n");
+print("Test sparse matrix stored by hash table.\n");
+mat1 = Hash_Matrix.new();
+
+mat1.add_note(0, 0, 0.6);
+mat1.show_all;
+if(mat1.search_node(0, 0))
+    print(mat1.search_node(0, 0), "\n");
+end
+print(mat1.delete_node(1, 0), "\n");
+
+mat1.add_note(0, 0, 0.7);
+mat1.add_note(0, 1, 0.3);
+mat1.add_note(1, 1, 0.8);
+mat1.show_all;
+
+print(mat1.delete_node(1, 1), "\n");
+mat1.show_all;
 
 END {
     print("Program end.\n");
