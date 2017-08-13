@@ -1,7 +1,7 @@
 #! /usr/bin/ruby -w
 # use cross-link-list to store sparse matrix
 
-# require './cross_link_list.rb'
+require './cross_link_list.rb'
 require './dynamic_array_list.rb'
 require './hash_matrix.rb'
 
@@ -59,6 +59,13 @@ mat1.show_all;
 
 print(mat1.delete_node(1, 1), "\n");
 mat1.show_all;
+
+print("\n");
+print("Test sparse matrix stored by cross link-list.\n");
+mat2 = Cross_Link_List.new();
+
+mat2.add_node(0, 0, 0.6);
+mat2.show_all;
 
 END {
     print("Program end.\n");
