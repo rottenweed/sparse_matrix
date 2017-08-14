@@ -32,6 +32,29 @@ class Cross_Link_List
             @next_list = next_list;
             @first_node = first_node;
         end
+
+        # iterator in line
+        def each_in_line()
+            if(block_given?)
+                node = @first_node;
+                while(node != nil)
+                    yield node;
+                    node = node.right;
+                end
+            end
+        end
+
+        # iterator in column
+        def each_in_column()
+            if(block_given?)
+                node = @first_node;
+                while(node != nil)
+                    yield node;
+                    node = node.down;
+                end
+            end
+        end
+
     end
 
     attr_reader(:line_cnt, :column_cnt);    # total count of line/column
@@ -131,20 +154,27 @@ class Cross_Link_List
         end
     end
 
+    # iterator for cross_link_list scan at line sequence
+    def each_line()
+        if(block_given?)
+            cur_line = @first_line;
+            while(cur_line != nil)
+                yield cur_line;
+                cur_line = cur_line.next_list;
+            end
+        end
+    end
+
     # Show all the nodes in the cross link-list
-    # according to the line sequence, then column sequence
+    # according to the line sequence at first, then column sequence
     def show_all()
         print("Total count of nodes: #{@node_cnt}\n");
-        line_list = @first_line;
-        while(line_list != nil)
-            print("line #{line_list.pos}:\n");
-            node = line_list.first_node;
-            while(node != nil)
+        self.each_line {|cur_line|
+            print("line #{cur_line.pos}:\n");
+            cur_line.each_in_line {|node|
                 print("  [#{node.line}, #{node.column}] = #{node.val}\n");
-                node = node.right;
-            end
-            line_list = line_list.next_list;
-        end
+            }
+        }
     end
     
 end
