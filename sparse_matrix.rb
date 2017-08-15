@@ -64,7 +64,14 @@ print("\n");
 print("Test sparse matrix stored by cross link-list.\n");
 mat2 = Cross_Link_List.new();
 
-mat2.add_node(0, 0, 0.6);
+mat2.add_node(1, 2, 0.7);
+mat2.show_all;
+
+mat2.add_node(0, 1, 0.4);
+mat2.show_all;
+
+mat2.add_node(2, 1, 0.8);
+mat2.add_node(1, 1, 0.1);
 mat2.show_all;
 
 END {
