@@ -6,7 +6,7 @@
 
 class Cross_Link_List
 
-    # build-in class for node
+    # build-in class for node.
     class Node
         attr_accessor(:val);            # value
         attr_reader(:line, :column);    # position
@@ -21,7 +21,7 @@ class Cross_Link_List
         end
     end
 
-    # bulid-in class for link-list head of line/column
+    # bulid-in class for link-list head of line/column.
     class Link_List_Head
         attr_reader(:pos);          # line or column of the list
         attr_accessor(:next_list);  # point to the next line/column list
@@ -77,9 +77,9 @@ class Cross_Link_List
         @cur_column_node = nil; # position in column link-list
     end
 
-    # Search the node through line link-list
-    # If node exists, return the node
-    # Else, return nil
+    # Search the node through line link-list.
+    # If node exists, return the node.
+    # Else, return nil.
     def search_node_by_line(line, column)
         node = nil;
         # initialize the search posiitons
@@ -110,9 +110,9 @@ class Cross_Link_List
         return node;
     end
 
-    # Search the node through column link-list
-    # If node exists, return the node
-    # Else, return nil
+    # Search the node through column link-list.
+    # If node exists, return the node.
+    # Else, return nil.
     def search_node_by_column(line, column)
         node = nil;
         # initialize the search posiitons
@@ -143,22 +143,24 @@ class Cross_Link_List
         return node;
     end
 
-    # Insert node to the cross link list
-    # If there is node already, refresh the value
+    # Insert node to the cross link list.
+    # If there is node already, refresh the value.
     def add_node(line, column, val)
         node = search_node_by_line(line, column);
         if(node != nil)     # search success, reflesh the value
             node.val = val;
         else    # node not exist, insert it
-            # at first, insert node in the line link-list
+            # create new node
             @node_cnt += 1;
+            node = Node.new(line, column, val);
+            # at first, insert node in the line link-list
             if(@cur_line_head == nil)   # should be the first line link-list
                 # create line link-list as the first line, and create node as its first node
                 @active_line_cnt += 1;
                 @cur_line_head = Link_List_Head.new(line);
                 @cur_line_head.next_list = @first_line;
-                @cur_line_node = Node.new(line, column, val);
-                @cur_line_head.first_node = @cur_line_node;
+                @cur_line_node = node;
+                @cur_line_head.first_node = node;
                 @first_line = @cur_line_head;
             elsif(@cur_line_head.pos < line)    # a new line should be insert in the middle
                 # create new line, insert it to line-head link-list
@@ -167,21 +169,51 @@ class Cross_Link_List
                 @cur_line_head.next_list = Link_List_Head.new(line);
                 @cur_line_head = @cur_line_head.next_list;
                 @cur_line_head.next_list = temp;
-                @cur_line_node = Node.new(line, column, val);
-                @cur_line_head.first_node = @cur_line_node;
+                @cur_line_node = node;
+                @cur_line_head.first_node = node;
             else    # the line existed, insert node in this line
                 if(@cur_line_node == nil) # should be the first node in the line
-                    @cur_line_node = Node.new(line, column, val);
+                    @cur_line_node = node;
                     @cur_line_node.right = @cur_line_head.first_node;
-                    @cur_line_head.first_node = @cur_line_node;
+                    @cur_line_head.first_node = node;
                 else    # a new node shoulde be insert in the line
                     temp = @cur_line_node.right;
-                    @cur_line_node.right = Node.new(line, column, val);
-                    @cur_line_node = @cur_line_node.right;
+                    @cur_line_node.right = node;
+                    @cur_line_node = node;
                     @cur_line_node.right = temp;
                 end
             end
             # insert node in the column link-list
+            search_node_by_column(line, column);
+            if(@cur_column_head == nil)   # should be the first column link-list
+                # create column link-list as the first column, and create node as its first node
+                @active_column_cnt += 1;
+                @cur_column_head = Link_List_Head.new(column);
+                @cur_column_head.next_list = @first_column;
+                @cur_column_node = node;
+                @cur_column_head.first_node = node;
+                @first_column = @cur_column_head;
+            elsif(@cur_column_head.pos < column)    # a new column should be insert in the middle
+                # create new column, insert it to column-head link-list
+                @active_column_cnt += 1;
+                temp = @cur_column_head.next_list;
+                @cur_column_head.next_list = Link_List_Head.new(column);
+                @cur_column_head = @cur_column_head.next_list;
+                @cur_column_head.next_list = temp;
+                @cur_column_node = node;
+                @cur_column_head.first_node = node;
+            else    # the column existed, insert node in this column
+                if(@cur_column_node == nil) # should be the first node in the column
+                    @cur_column_node = node;
+                    @cur_column_node.down = @cur_column_head.first_node;
+                    @cur_column_head.first_node = node;
+                else    # a new node shoulde be insert in the column
+                    temp = @cur_column_node.down;
+                    @cur_column_node.down = node;
+                    @cur_column_node = node;
+                    @cur_column_node.down = temp;
+                end
+            end
         end
     end
 
@@ -207,8 +239,8 @@ class Cross_Link_List
         end
     end
 
-    # Show all the nodes in the cross link-list
-    # according to the line sequence at first, then column sequence
+    # Show all the nodes in the cross link-list.
+    # according to the line sequence at first, then column sequence.
     def show_all()
         print("Total count of nodes: #{@node_cnt}\n");
         self.each_line {|cur_line|
@@ -217,7 +249,13 @@ class Cross_Link_List
                 print("  [#{node.line}, #{node.column}] = #{node.val}\n");
             }
         }
-    end
+        self.each_column {|cur_column|
+            print("column #{cur_column.pos}:\n");
+            cur_column.each_in_column {|node|
+                print("  [#{node.line}, #{node.column}] = #{node.val}\n");
+            }
+        }
+   end
     
 end
 
